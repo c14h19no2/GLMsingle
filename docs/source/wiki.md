@@ -161,6 +161,16 @@ Note that within a range, the expected timecourse shape undergoes fairly modest 
 
 Another potential idea is to code a long event as a string of successive short events. For example, suppose that you have some trials that are 2-s in duration, and that occasionally you have a trial that is 6-s in duration. If you are willing to believe that the 6-s duration event is homogeneous in its neural activity over time, you could code this event as a series of 3 2-s events, and label each of these events as reflecting the same condition. In this way, you still conform to the idea that the timecourse of the hemodynamic response is fixed and that you expect the timecourse shape to summate over time. Once you get the individual single-trial betas out, you can simply, for example, average over the 3 individual betas, if you like.
 
+A related scenario is when **every trial has a different stimulus duration**, such as when the stimulus disappears immediately upon the participant's response and response times vary across trials. In this case, there are a few practical approaches:
+
+1. **Use the average duration**: One straightforward approach is to use the mean (or median) stimulus duration across all trials as the `stimdur` input. As noted above, within a certain range, the expected timecourse shape is fairly similar, so this approximation may be reasonable if trial durations do not vary too wildly (e.g., if most response times fall within a 0.5-2 s range).
+
+2. **Use a minimal "impulse-like" duration**: If the trial durations are all relatively brief (e.g., typically under 1-2 s), you could set `stimdur` to a short value (e.g., 0.5 s or even smaller) to model each trial as a brief impulse-like event. This treats all trials as having a similar, brief neural response regardless of exact response time.
+
+3. **Model the response component separately**: If the variation in response time is substantial, you might consider modeling the motor/response component of the trial as a separate event. For example, you could code the stimulus onset as one event and the button press (response) as another event. This way, the variable response-time component is explicitly modeled, and the stimulus-evoked response can be estimated more cleanly.
+
+The key point is that GLMsingle uses a single `stimdur` value for all trials, so you will need to decide on a reasonable approximation or modeling strategy based on the nature of your experiment. If the variability in trial durations is modest relative to the temporal resolution of the BOLD response, the impact on beta estimates is likely to be small.
+
 ### Can I exert control over the noise pool voxels?
 
 The default behavior is to automatically select noise pool voxels based on
